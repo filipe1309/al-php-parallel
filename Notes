@@ -1,0 +1,12 @@
+https://github.com/krakjoe/parallel
+
+PHP FPM https://www.php.net/manual/en/install.fpm.php
+PHP ZTS = Thread Safe
+
+composer dumpautoload
+
+docker build -t php-parallel .
+
+$ alias php=’docker run --rm -itv $(pwd):/app -w /app php-parallel php’
+
+docker run --rm -itv $(pwd):/app -w /app php-parallel php parallel.php

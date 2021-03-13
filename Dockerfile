@@ -1,4 +1,4 @@
-FROM php:zts
+FROM php:7.4-zts
 
 RUN pecl install parallel
 RUN docker-php-ext-enable parallel
