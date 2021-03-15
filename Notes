@@ -10,3 +10,5 @@ docker build -t php-parallel .
 $ alias php=’docker run --rm -itv $(pwd):/app -w /app php-parallel php’
 
 docker run --rm -itv $(pwd):/app -w /app php-parallel php parallel.php
+
+rm -f storage/resized/*.jpg
