@@ -1,6 +1,6 @@
 https://github.com/krakjoe/parallel
 
-PHP FPM https://www.php.net/manual/en/install.fpm.php
+PHP FPM https://www.php.net/manual/en/install.fpm.php - Native PHP parallel on web
 PHP ZTS = Thread Safe
 
 composer dumpautoload
