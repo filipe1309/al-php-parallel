@@ -2,6 +2,8 @@
 
 use parallel\Runtime;
 
+$start = microtime(true);
+
 $runtime = new Runtime();
 
 // Create another thread
@@ -24,3 +26,6 @@ $runtime->run(function () {
 echo 'Executando tarefa demorada 1' . PHP_EOL;
 sleep(3);
 echo 'Finalizando tarefa demorada 1' . PHP_EOL;
+
+$time_elapsed_secs = microtime(true) - $start;
+echo $time_elapsed_secs . PHP_EOL;

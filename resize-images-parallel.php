@@ -6,16 +6,18 @@ use Alura\Threads\Student\InMemoryStudentRepository;
 
 require_once 'vendor/autoload.php';
 
+$start = microtime(true);
+
 $repository = new InMemoryStudentRepository();
 $studentList = $repository->all();
 
 $runtimes = [];
 foreach ($studentList as $i => $student) {
-  
+
   $runtimes[$i] = new Runtime('vendor/autoload.php');
   $runtimes[$i]->run(function (Student $student) {
     echo 'Resizing ' . $student->fullName() . ' profile picture' . PHP_EOL;
-    
+
     $profilePicturePath = $student->profilePicturePath();
     [$width, $height] = getimagesize($profilePicturePath);
 
@@ -39,3 +41,6 @@ foreach ($runtimes as $runtime) {
 }
 
 echo 'Finishing main thread' . PHP_EOL;
+
+$time_elapsed_secs = microtime(true) - $start;
+echo $time_elapsed_secs . PHP_EOL;

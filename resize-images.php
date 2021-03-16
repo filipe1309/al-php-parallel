@@ -4,6 +4,8 @@ use Alura\Threads\Student\InMemoryStudentRepository;
 
 require_once 'vendor/autoload.php';
 
+$start = microtime(true);
+
 $repository = new InMemoryStudentRepository();
 $studentList = $repository->all();
 
@@ -17,16 +19,19 @@ foreach ($studentList as $student) {
 
 function resizeTo200PixelsWidth($imagePath)
 {
-    [$width, $height] = getimagesize($imagePath);
+  [$width, $height] = getimagesize($imagePath);
 
-    $ratio = $height / $width;
+  $ratio = $height / $width;
 
-    $newWidth = 200;
-    $newHeight = 200 * $ratio;
+  $newWidth = 200;
+  $newHeight = 200 * $ratio;
 
-    $sourceImage = imagecreatefromjpeg($imagePath);
-    $destinationImage = imagecreatetruecolor($newWidth, $newHeight);
-    imagecopyresampled($destinationImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+  $sourceImage = imagecreatefromjpeg($imagePath);
+  $destinationImage = imagecreatetruecolor($newWidth, $newHeight);
+  imagecopyresampled($destinationImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 
-    imagejpeg($destinationImage, __DIR__ . '/storage/resized/' . basename($imagePath));
+  imagejpeg($destinationImage, __DIR__ . '/storage/resized/' . basename($imagePath));
 }
+
+$time_elapsed_secs = microtime(true) - $start;
+echo $time_elapsed_secs . PHP_EOL;
