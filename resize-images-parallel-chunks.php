@@ -1,7 +1,6 @@
 <?php
 
 use parallel\Runtime;
-use Alura\Threads\Student\Student;
 use Alura\Threads\Student\InMemoryStudentRepository;
 
 require_once 'vendor/autoload.php';
@@ -11,33 +10,39 @@ $start = microtime(true);
 $repository = new InMemoryStudentRepository();
 $studentList = $repository->all();
 
+const CORES_NUMBER = 4;
+$studentChunks = array_chunk($studentList, ceil(count($studentList) / CORES_NUMBER));
+
 $runtimes = [];
-foreach ($studentList as $i => $student) {
+foreach ($studentChunks as $i => $studentChunk) {
 
-  $runtimes[$i] = new Runtime('vendor/autoload.php');
-  $runtimes[$i]->run(function (Student $student) {
-    echo 'Resizing ' . $student->fullName() . ' profile picture' . PHP_EOL;
+    $runtimes[$i] = new Runtime('vendor/autoload.php');
+    $runtimes[$i]->run(function (array $students) {
 
-    $profilePicturePath = $student->profilePicturePath();
-    [$width, $height] = getimagesize($profilePicturePath);
+        foreach ($students as $student) {
+            echo 'Resizing ' . $student->fullName() . ' profile picture' . PHP_EOL;
 
-    $ratio = $height / $width;
+            $profilePicturePath = $student->profilePicturePath();
+            [$width, $height] = getimagesize($profilePicturePath);
 
-    $newWidth = 200;
-    $newHeight = 200 * $ratio;
+            $ratio = $height / $width;
 
-    $sourceImage = imagecreatefromjpeg($profilePicturePath);
-    $destinationImage = imagecreatetruecolor($newWidth, $newHeight);
-    imagecopyresampled($destinationImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+            $newWidth = 200;
+            $newHeight = 200 * $ratio;
 
-    imagejpeg($destinationImage, __DIR__ . '/storage/resized/' . basename($profilePicturePath));
+            $sourceImage = imagecreatefromjpeg($profilePicturePath);
+            $destinationImage = imagecreatetruecolor($newWidth, $newHeight);
+            imagecopyresampled($destinationImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 
-    echo 'Finishing resizing ' . $student->fullName() . ' profile picture' . PHP_EOL;
-  }, [$student]);
+            imagejpeg($destinationImage, __DIR__ . '/storage/resized/' . basename($profilePicturePath));
+
+            echo 'Finishing resizing ' . $student->fullName() . ' profile picture' . PHP_EOL;
+        }
+    }, [$studentChunk]);
 }
 
 foreach ($runtimes as $runtime) {
-  $runtime->close();
+    $runtime->close();
 }
 
 echo 'Finishing main thread' . PHP_EOL;
