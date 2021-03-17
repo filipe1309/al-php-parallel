@@ -1,6 +1,9 @@
 <?php
 
-function tarefa2 () {
+$start = microtime(true);
+
+function tarefa2()
+{
   // var_dump('Tarefa 2', debug_backtrace());
   echo 'Executando tarefa demorada 2' . PHP_EOL;
   sleep(2);
@@ -13,3 +16,6 @@ sleep(3);
 echo 'Finalizando tarefa demorada 1' . PHP_EOL;
 
 tarefa2();
+
+$time_elapsed_secs = microtime(true) - $start;
+echo $time_elapsed_secs . PHP_EOL;

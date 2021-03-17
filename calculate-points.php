@@ -5,6 +5,8 @@ use Alura\Threads\Student\InMemoryStudentRepository;
 
 require_once 'vendor/autoload.php';
 
+$start = microtime(true);
+
 $repository = new InMemoryStudentRepository();
 $studentList = $repository->all();
 
@@ -22,3 +24,6 @@ foreach ($studentList as $student) {
 }
 
 printf('We had a total of %d points today%s', $totalPoints, PHP_EOL);
+
+$time_elapsed_secs = microtime(true) - $start;
+echo $time_elapsed_secs . PHP_EOL;
